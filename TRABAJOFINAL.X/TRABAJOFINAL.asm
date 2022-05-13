@@ -26,11 +26,11 @@ STEMP	EQU	0X28	 ;Registro para guardar STATUS cuando entra a la ISR
 RTEMP	EQU	0X29	 ;Registro para almacenar temporalmente el valor a mostrar en el display
 DEB0	EQU	0X2A     ;Registro auxiliar para realizar el DEBOUNCE	
 DEB1	EQU	0X2B	 ;Registro auxiliar para realizar el DEBOUNCE
-REG3A	EQU	0X2C
-REG2A	EQU	0X2D
-REG1A	EQU	0X2E
-REG0A	EQU	0X2F
-DATOA	EQU	0X30
+REG3A	EQU	0X2C	 ;Registro para enviar datos por TX
+REG2A	EQU	0X2D	 ;Registro para enviar datos por TX
+REG1A	EQU	0X2E	 ;Registro para enviar datos por TX
+REG0A	EQU	0X2F	 ;Registro para enviar datos por TX
+DATOA	EQU	0X30	 ;Registro auxiliar para actualizar registros REGxA
 
 	ORG	    0X00
 	GOTO	    MAIN
@@ -113,6 +113,17 @@ INTO
 	BTFSS	    TXSTA,TRMT
 	GOTO	    $-1
 
+	BANKSEL	    REG0
+	MOVLW	    0X3F
+	MOVWF	    REG0
+	MOVWF	    REG1
+	MOVWF	    REG2
+	MOVWF	    REG3
+	CLRF	    REG0A
+	CLRF	    REG1A
+	CLRF	    REG2A
+	CLRF	    REG3A
+	
 	BANKSEL	    INTCON
 	BCF	    INTCON,INTF
 	BANKSEL	    STATUS
@@ -130,10 +141,10 @@ MAIN
 	BANKSEL	    TRISA
 	MOVLW	    0X01
 	MOVWF	    TRISB
-	CLRF	    TRISA ;PORTA salidas digitales para datos de los display
-	CLRF	    TRISC ;PORTC salidas digitales para multiplexar displays (en uso PORTC <3-0>)
+	CLRF	    TRISA 
+	CLRF	    TRISC 
 	MOVLW	    0XF0
-	MOVWF	    TRISD ;PORTD <7-4> entradas digitales, PORTD <3-0> salidas digitales para teclado matricial
+	MOVWF	    TRISD 
 	BANKSEL	    TXSTA
 	MOVLW	    0X24
 	MOVWF	    TXSTA
@@ -146,18 +157,18 @@ MAIN
 	MOVLW	    .25
 	MOVWF	    SPBRG
 	BANKSEL	    OPTION_REG
-	MOVLW	    0X84  ;PS asignado al TMR0, PS 1:32
+	MOVLW	    0X84  
 	MOVWF	    OPTION_REG
 	BANKSEL	    PIE1
 	BSF	    PIE1,TXIE
 	BANKSEL	    INTCON
 	MOVLW	    0XB0
-	MOVWF	    INTCON;Habilita la interrupción por desborde de TMR0
+	MOVWF	    INTCON
 	BANKSEL	    TMR0
 	MOVLW	    .100
-	MOVWF	    TMR0  ;Carga el TMR0 con un 100 para que desborde a los 5[ms]
+	MOVWF	    TMR0  
 	MOVLW	    0X11  
-	MOVWF	    AUXC  ;Carga AUXC con b'11101110' para que al rotarlo siempre seleccione de a un display (por bajo)
+	MOVWF	    AUXC  
 	MOVWF	    PORTC
 	MOVLW	    0X3F
 	MOVWF	    REG0
@@ -170,9 +181,9 @@ MAIN
 	CLRF	    REG1A
 	CLRF	    REG0A
 	
-;Rutina de teclado por polling
+
 NEXT	MOVLW	    0XEE
-	MOVWF	    AUXD  ;Carga AUXD con b'01110111' para que al rotarlo active solo una de las salidas bits <3-0> para decodificar el teclado
+	MOVWF	    AUXD  
 	CLRF	    DATO
 KEYB	MOVF	    AUXD,W
 	MOVWF	    PORTD 
@@ -189,11 +200,11 @@ KEYB	MOVF	    AUXD,W
 	GOTO	    SAVE
 	INCF	    DATO,1
 	
-	BSF	    STATUS,C ;Rotación a la izquierda de AUXD sin carry
+	BSF	    STATUS,C 
 	BTFSS	    AUXD,7
 	BCF	    STATUS,C
 	RLF	    AUXD,1
-	GOTO	    KEYB     ;Vuelve a hacer la rutina de teclado en un saltando de fila en la matriz
+	GOTO	    KEYB     
 	
 SAVE
 	CALL	    DEBOUNCE
@@ -213,13 +224,13 @@ DEBOUNCE
 	BANKSEL	    DEB0
 	MOVLW	    .255
 	MOVWF	    DEB0
-	MOVLW	    .8
+	MOVLW	    .12
 	MOVWF	    DEB1
 	
-LOOP1	DECFSZ	    DEB1
+LOOP1	DECFSZ	    DEB1,1
 	GOTO	    LOOP
 	GOTO	    RET
-LOOP	DECFSZ	    DEB0
+LOOP	DECFSZ	    DEB0,1
 	GOTO	    LOOP
 	GOTO	    LOOP1
 	
@@ -249,7 +260,7 @@ DECOD
 	RETLW	    0X7B
 	RETLW	    0X71
 	
-ORDER ;Ordena los datos corriendolos de derecha a izquiera en los displays
+ORDER 
 	MOVF	    REG2,W
 	MOVWF	    REG3
 	MOVF	    REG1,W
@@ -269,7 +280,7 @@ ORDER ;Ordena los datos corriendolos de derecha a izquiera en los displays
 	
 	RETURN	
 	
-RKEY ;Verifica si se soltó la tecla
+RKEY 
 	BANKSEL	    INTCON
 	BCF	    INTCON,GIE
 	BANKSEL	    PORTD

@@ -1,3 +1,3 @@
 build/default/production/TRABAJOFINAL.o:  \
-	/home/francabrera/Desktop/MPLAB/TRABAJOFINAL.X/TRABAJOFINAL.asm  \
+	/home/francabrera/Desktop/MPLAB/TP_Final_ElectronicaDigitalII/TRABAJOFINAL.X/TRABAJOFINAL.asm  \
 
