@@ -119,6 +119,7 @@ void loop() {
       lcd.print("    Deactivating");
       delay(1000);
       isActive=false;
+      trigger=false;
       digitalWrite(LED_BUILTIN,LOW);
     }
     else if(pass==triggerWord){
