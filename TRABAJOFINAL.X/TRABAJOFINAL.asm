@@ -2,11 +2,11 @@
 ;                                                                              *
 ;    Filename: TRABAJOFINAL                                                    *
 ;    Date: 07/05/2022                                                          *
-;    File Version: 1.0.0                                                       *
+;    File Version: 2.0.0                                                       *
 ;    Author: Francisco Cabrera                                                 *
 ;    Company: FCEFyN                                                           *
-;    Description: Decodificación de teclado y muestra de valores por display   *                                                   *
-;                                                                              *
+;    Description: Decodificación de teclado y muestra de valores por display y *                                                   *
+;                 comunicacion serie                                           *
 ;*******************************************************************************
 	
 	LIST	    P=16F887
@@ -26,15 +26,26 @@ STEMP	EQU	0X28	 ;Registro para guardar STATUS cuando entra a la ISR
 RTEMP	EQU	0X29	 ;Registro para almacenar temporalmente el valor a mostrar en el display
 DEB0	EQU	0X2A     ;Registro auxiliar para realizar el DEBOUNCE	
 DEB1	EQU	0X2B	 ;Registro auxiliar para realizar el DEBOUNCE
-	
+REG3A	EQU	0X2C
+REG2A	EQU	0X2D
+REG1A	EQU	0X2E
+REG0A	EQU	0X2F
+DATOA	EQU	0X30
+
 	ORG	    0X00
 	GOTO	    MAIN
 	
 	ORG	    0X04
+
 	MOVWF	    WTEMP  
 	SWAPF	    STATUS,W
 	MOVWF	    STEMP   ;Guarda el contexto del procesador
 	
+	BANKSEL	    INTCON
+	BTFSC	    INTCON,INTF
+	GOTO	    INTO
+	
+	BANKSEL	    STATUS
 	BCF	    STATUS,C
 	BTFSC	    AUXC,7
 	BSF	    STATUS,C
@@ -75,20 +86,72 @@ NEXT2	MOVWF	    RTEMP
 	SWAPF	    WTEMP,W
 	RETFIE
 	
+INTO	
+	BCF	    PIR1,TXIF
+	BANKSEL	    TXREG
+	MOVF	    REG3A,W
+	MOVWF	    TXREG
+	BANKSEL	    TXSTA
+	BTFSS	    TXSTA,TRMT
+	GOTO	    $-1
+	BANKSEL	    TXREG
+	MOVF	    REG2A,W
+	MOVWF	    TXREG
+	BANKSEL	    TXSTA
+	BTFSS	    TXSTA,TRMT
+	GOTO	    $-1
+	BANKSEL	    TXREG
+	MOVF	    REG1A,W
+	MOVWF	    TXREG
+	BANKSEL	    TXSTA
+	BTFSS	    TXSTA,TRMT
+	GOTO	    $-1
+	BANKSEL	    TXREG
+	MOVF	    REG0A,W
+	MOVWF	    TXREG
+	BANKSEL	    TXSTA
+	BTFSS	    TXSTA,TRMT
+	GOTO	    $-1
+
+	BANKSEL	    INTCON
+	BCF	    INTCON,INTF
+	BANKSEL	    STATUS
+	SWAPF	    STEMP,W
+	MOVWF	    STATUS
+	SWAPF	    WTEMP,1
+	SWAPF	    WTEMP,W
+	RETFIE
+
+	
 MAIN
 	BANKSEL	    ANSEL
 	CLRF	    ANSEL
+	CLRF	    ANSELH
 	BANKSEL	    TRISA
-	CLRF	    TRISB
+	MOVLW	    0X01
+	MOVWF	    TRISB
 	CLRF	    TRISA ;PORTA salidas digitales para datos de los display
 	CLRF	    TRISC ;PORTC salidas digitales para multiplexar displays (en uso PORTC <3-0>)
 	MOVLW	    0XF0
 	MOVWF	    TRISD ;PORTD <7-4> entradas digitales, PORTD <3-0> salidas digitales para teclado matricial
+	BANKSEL	    TXSTA
+	MOVLW	    0X24
+	MOVWF	    TXSTA
+	BANKSEL	    RCSTA
+	MOVLW	    0X80
+	MOVWF	    RCSTA
+	BANKSEL	    BAUDCTL
+	BCF	    BAUDCTL,BRG16
+	BANKSEL	    SPBRG
+	MOVLW	    .25
+	MOVWF	    SPBRG
 	BANKSEL	    OPTION_REG
 	MOVLW	    0X84  ;PS asignado al TMR0, PS 1:32
 	MOVWF	    OPTION_REG
+	BANKSEL	    PIE1
+	BSF	    PIE1,TXIE
 	BANKSEL	    INTCON
-	MOVLW	    0XA0
+	MOVLW	    0XB0
 	MOVWF	    INTCON;Habilita la interrupción por desborde de TMR0
 	BANKSEL	    TMR0
 	MOVLW	    .100
@@ -102,6 +165,10 @@ MAIN
 	MOVWF	    REG2
 	MOVWF	    REG3
 	MOVWF	    PORTA
+	CLRF	    REG3A
+	CLRF	    REG2A
+	CLRF	    REG1A
+	CLRF	    REG0A
 	
 ;Rutina de teclado por polling
 NEXT	MOVLW	    0XEE
@@ -132,6 +199,8 @@ SAVE
 	CALL	    DEBOUNCE
 	MOVLW	    0X0F
 	ANDWF	    DATO,1
+	MOVF	    DATO,W
+	MOVWF	    DATOA
 	CALL	    DECOD
 	MOVWF	    DATO
 	CALL	    ORDER
@@ -144,7 +213,7 @@ DEBOUNCE
 	BANKSEL	    DEB0
 	MOVLW	    .255
 	MOVWF	    DEB0
-	MOVLW	    .6
+	MOVLW	    .8
 	MOVWF	    DEB1
 	
 LOOP1	DECFSZ	    DEB1
@@ -189,6 +258,15 @@ ORDER ;Ordena los datos corriendolos de derecha a izquiera en los displays
 	MOVWF	    REG1
 	MOVF	    DATO,W
 	MOVWF	    REG0
+	MOVF	    REG2A,W
+	MOVWF	    REG3A
+	MOVF	    REG1A,W
+	MOVWF	    REG2A
+	MOVF	    REG0A,W
+	MOVWF	    REG1A
+	MOVF	    DATOA,W
+	MOVWF	    REG0A
+	
 	RETURN	
 	
 RKEY ;Verifica si se soltó la tecla
