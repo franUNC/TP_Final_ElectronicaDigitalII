@@ -1,4 +1,4 @@
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  1
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -29,7 +29,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00009 
                       00810         LIST
                       00014         
-2007   3CE4           00015     __CONFIG    _CONFIG1, _INTOSCIO & _WDT_OFF & _PWRTE_ON & _MCLRE_ON & _BOR_OFF
+2007   2CE4           00015     __CONFIG    _CONFIG1, _INTOSCIO & _WDT_OFF & _PWRTE_ON & _MCLRE_ON & _BOR_OFF & _LVP_OFF
                       00016         
   00000020            00017 AUXC    EQU     0X20     ;Registro auxiliar para multiplexar los displays
   00000021            00018 AUXD    EQU     0X21     ;Registro para decodificación de teclado
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0004   00A7           00040         MOVWF       WTEMP  
 0005   0E03           00041         SWAPF       STATUS,W
 0006   00A8           00042         MOVWF       STEMP   ;Guarda el contexto del procesador
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  2
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0038   0099           00093         MOVWF       TXREG
 0039   1683 1303      00094         BANKSEL     TXSTA
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  3
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 006D   0189           00140         CLRF        ANSELH
 006E   1683 1303      00141         BANKSEL     TRISA
 0070   3001           00142         MOVLW       0X01
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  4
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
                       00184 
 00A1   30EE           00185 NEXT    MOVLW       0XEE
 00A2   00A1           00186         MOVWF       AUXD  
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  5
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -293,7 +293,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00D0                  00237 RET     
 00D0   1283 1303      00238         BANKSEL     INTCON
 00D2   178B           00239         BSF         INTCON,GIE
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  6
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -352,7 +352,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0101   0508           00290         ANDWF       PORTD,W
 0102   3CF0           00291         SUBLW       0XF0
 0103   1D03           00292         BTFSS       STATUS,Z
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  7
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -366,8 +366,8 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 010A   1283 1303      00298         BANKSEL     PORTD
 010C   0008           00299         RETURN  
                       00300 
-3CE4                  00301         END
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  8
+2CE4                  00301         END
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  8
 
 
 SYMBOL TABLE
@@ -426,7 +426,7 @@ BRG4                              00000004
 BRG5                              00000005
 BRG6                              00000006
 BRG7                              00000007
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE  9
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE  9
 
 
 SYMBOL TABLE
@@ -485,7 +485,7 @@ CCPR2H                            0000001C
 CCPR2L                            0000001B
 CHECK                             00000100
 CHS0                              00000002
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 10
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 10
 
 
 SYMBOL TABLE
@@ -544,7 +544,7 @@ HTS                               00000002
 I2C_DATA                          00000005
 I2C_READ                          00000002
 I2C_START                         00000003
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 11
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 11
 
 
 SYMBOL TABLE
@@ -603,7 +603,7 @@ NOT_TX8                           00000006
 NOT_W                             00000002
 NOT_WRITE                         00000002
 OERR                              00000001
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 12
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 12
 
 
 SYMBOL TABLE
@@ -662,7 +662,7 @@ RA3                               00000003
 RA4                               00000004
 RA5                               00000005
 RA6                               00000006
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 13
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 13
 
 
 SYMBOL TABLE
@@ -721,7 +721,7 @@ REG3A                             0000002C
 RET                               000000D0
 RKEY                              000000F9
 RP0                               00000005
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 14
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 14
 
 
 SYMBOL TABLE
@@ -780,7 +780,7 @@ T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
 T0SE                              00000004
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 15
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 15
 
 
 SYMBOL TABLE
@@ -839,7 +839,7 @@ TRISC                             00000087
 TRISC0                            00000000
 TRISC1                            00000001
 TRISC2                            00000002
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 16
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 16
 
 
 SYMBOL TABLE
@@ -898,7 +898,7 @@ W                                 00000000
 WCOL                              00000007
 WDTCON                            00000105
 WDTPS0                            00000001
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 17
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 17
 
 
 SYMBOL TABLE
@@ -957,7 +957,7 @@ _FCMEN_ON                         00003FFF
 _FOSC_EC                          00003FFB
 _FOSC_EXTRC_CLKOUT                00003FFF
 _FOSC_EXTRC_NOCLKOUT              00003FFE
-MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/MPLAB/   5-13-2022  15:19:09         PAGE 18
+MPASM 5.87  /HOME/FRANCABRERA/DESKTOP/TP_FIN   5-31-2022  11:45:44         PAGE 18
 
 
 SYMBOL TABLE

@@ -12,7 +12,7 @@
 	LIST	    P=16F887
 	#include    <p16f887.inc>
 	
-    __CONFIG    _CONFIG1, _INTOSCIO & _WDT_OFF & _PWRTE_ON & _MCLRE_ON & _BOR_OFF
+    __CONFIG    _CONFIG1, _INTOSCIO & _WDT_OFF & _PWRTE_ON & _MCLRE_ON & _BOR_OFF & _LVP_OFF
 	
 AUXC	EQU	0X20     ;Registro auxiliar para multiplexar los displays
 AUXD	EQU	0X21	 ;Registro para decodificación de teclado
